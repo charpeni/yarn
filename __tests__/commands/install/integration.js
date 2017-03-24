@@ -11,8 +11,15 @@ import Lockfile from '../../../src/lockfile/wrapper.js';
 import * as fs from '../../../src/util/fs.js';
 import {getPackageVersion, explodeLockfile, runInstall, createLockfile} from '../_helpers.js';
 import {promisify} from '../../../src/util/promise';
+import inquirer from 'inquirer';
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 150000;
+// automatically chose the first available version if cached does not fit
+inquirer.prompt = jest.fn((questions) => {
+  const chosenVersion = questions[0].choices[0];
+  return Promise.resolve({package: chosenVersion});
+});
+
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 180000;
 
 let request = require('request');
 const assert = require('assert');
